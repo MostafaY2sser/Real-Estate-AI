@@ -1,14 +1,14 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import useFetch from "../../../hooks/useFetch";
-import useUpdate from "../../../hooks/useUpdate";
+import { useProjects } from "../../../api/adminApi/projects";
 
 export default function EditProject() {
   const { id } = useParams();
   const navigate = useNavigate();
 
   const { getData } = useFetch();
-  const { updateData, loading, error } = useUpdate();
+  const { updateProject, loading, error } = useProjects();
 
   const [formData, setFormData] = useState({
     title: "",
@@ -47,7 +47,7 @@ export default function EditProject() {
     }
   };
 
-  const handleSubmit = async (e) => {
+   const handleSubmit = async (e) => {
     e.preventDefault();
 
     const form = new FormData();
@@ -56,11 +56,9 @@ export default function EditProject() {
     form.append("description", formData.description);
     if (formData.image) form.append("image", formData.image);
 
-    await updateData(`/projects/${id}`, form, {
-      headers: { "Content-Type": "multipart/form-data" },
-    });
+    const success = await updateProject(id, form); 
 
-    navigate("/dashboard/projects");
+    if (success) navigate("/dashboard/projects"); 
   };
 
   return (

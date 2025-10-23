@@ -1,23 +1,20 @@
 import { useEffect } from "react";
 import { Link } from "react-router-dom";
-import useFetch from "../../../hooks/useFetch";
-import useDelete from "../../../hooks/useDelete";
 import { AiOutlineDelete } from "react-icons/ai";
 import { FaPenToSquare } from "react-icons/fa6";
 import ButtonFill from "../../../components/common/ButtonFill";
+import { useProjects } from "../../../api/adminApi/projects";
 
 export default function ProjectsList() {
-  const { getData, data: projects, loading } = useFetch();
-  const { deleteData } = useDelete();
+
+  const { projects, loading, fetchProjects , deleteProjects } = useProjects();
 
   useEffect(() => {
-    getData("/projects");
+    fetchProjects();
   }, []);
 
-  const handleDelete = async (id) => {
-    await deleteData(`/projects/${id}`);
-    confirm("هل أنت متأكد من حذف هذا المشروع؟") &&
-    getData("/projects"); 
+  const handleDelete = (id) => {
+    deleteProjects(id);
   };
 
   if (loading) return <p>جاري تحميل البيانات...</p>;

@@ -1,7 +1,7 @@
 
 // useUpdate.js
-import axios from "axios";
 import { useState } from "react";
+import axiosClient from "../api/axiosClient";
 
 export default function useUpdate() {
   const [loading, setLoading] = useState(false);
@@ -11,7 +11,7 @@ export default function useUpdate() {
     setLoading(true);
     setError(null);
     try {
-      const res = await axios.post(`http://127.0.0.1:8000/api${url}?_method=PUT`, formData, config);
+      const res = await axiosClient.post(`${url}?_method=PUT`, formData, config);
       return res.data;
     } catch (err) {
       console.error("Update Error:", err.response?.data);

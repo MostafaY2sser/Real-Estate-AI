@@ -1,10 +1,12 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import usePost from "../../../hooks/usePost";
+// import usePost from "../../../hooks/usePost";
+import { useProjects } from "../../../api/adminApi/projects";
 
 export default function AddProject() {
   const navigate = useNavigate();
-  const { postData, loading, error } = usePost();
+  // const { postData, loading, error } = usePost();
+  const { addProject, loading, error } = useProjects();
 
   const [formData, setFormData] = useState({
     title: "",
@@ -25,13 +27,12 @@ export default function AddProject() {
     e.preventDefault();
 
     const data = new FormData();
-    data.append("title", formData.title);
-    data.append("location", formData.location);
-    data.append("description", formData.description);
-    if (formData.image) data.append("image", formData.image);
+    Object.entries(formData).forEach(([key, value]) => {
+      if (value) data.append(key, value);
+    });
 
-    await postData("/projects", data, true);
-    navigate("/dashboard/projects");
+    const success = await addProject(data);
+    if (success) navigate("/dashboard/projects");
   };
 
   return (
@@ -99,9 +100,8 @@ export default function AddProject() {
           <button
             type="submit"
             disabled={loading}
-            className={`px-4 py-2 rounded text-white ${
-              loading ? "bg-blue-400" : "bg-blue-600 hover:bg-blue-700"
-            }`}
+            className={`px-4 py-2 rounded text-white ${loading ? "bg-blue-400" : "bg-blue-600 hover:bg-blue-700"
+              }`}
           >
             {loading ? "جارٍ الحفظ..." : "حفظ المشروع"}
           </button>
@@ -110,3 +110,8 @@ export default function AddProject() {
     </div>
   );
 }
+
+
+
+
+

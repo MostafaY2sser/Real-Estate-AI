@@ -1,17 +1,16 @@
 import { useEffect } from "react";
-import useFetch from "../../../hooks/useFetch";
 import ProjectCard from "./ProjectCard";
+import { useProjects } from "../../../api/adminApi/projects";
+
 
 const ProjectsSection = () => {
 
-
-  const { getData, data: projects, loading } = useFetch();
+  const { fetchProjects, projects } = useProjects();
   
     useEffect(() => {
-      getData("/projects");
+      fetchProjects();
     }, []);
     
-
 
   return (
     <section className="py-20 bg-white" id="projects">
